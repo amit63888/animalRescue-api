@@ -31,6 +31,26 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true,
       },
+      otp: {
+        type: String,
+       
+      },
+      token: {
+        type: String,
+        
+      },
+     
+        createdAt: {
+          type: Date,  
+          required: true,
+          default: Date.now  
+        },
+        updatedAt: {
+          type: Date,  
+          required: true,
+          default: Date.now  
+        }
+
      
     
 }); 

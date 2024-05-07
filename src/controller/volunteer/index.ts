@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
 import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
-import nodemailer from 'nodemailer'
+import jwt from "jsonwebtoken"; 
 import yenv from "yenv";
+import { generateOTP, sendEmail } from "../../utills";
 const env = yenv("env.yaml", { env: "development" });
 const UserSchema = require('../../model/volunteer/user');
 
@@ -145,56 +145,24 @@ export const ChangePassword = async (req: Request, res: Response) => {
     });
   }
 };
-const sendEmail = async (to:any, subject:any, text:any) => {
-  try {
-      const transporter = nodemailer.createTransport({
-          host: env.MAIL_HOST,
-          port: env.MAIL_PORT,
-          secure: false,
-          auth: {
-                 user:env.MAIL_USERNAME,
-                 pass:env.MAIL_PASSWORD
-              }
-      });
-      const mailOptions = {
-          from:env.MAIL_USERNAME ,
-          to: `${to}`,
-          subject: subject,
-          text: " ",
-          html: "<p> click below, To Reset <a href='https://techwagger.com/reset-password/" + text + "'> click here,</a></p>"
-//
-      };
-       await transporter.sendMail(mailOptions);
-  } catch (error) {
-      console.error('Error sending email:', error);
-      throw new Error('Failed to send email');
-  }
-};
-const generateOTP = () => {
-  const otpLength = 10;
-  const digits = '0123456789';
-  let OTP = '';
-  for (let i = 0; i < otpLength; i++) {
-      OTP += digits[Math.floor(Math.random() * 10)];
-  }
-  return OTP;
-};
+
+
 export const forgetPassword = async (req: any, res: any) => {
   try {
       const { email } = req.body;
       const OTP = await generateOTP();
-      //  const user = await Users.findOne({where:{ email }});
-      //  if (!user) {
-      //     return res.status(404).json({
-      //         status: 200,
-      //         error: false,
-      //         message: "User not found",
-      //         data: []
-      //       });
-      // }
+       const user = await UserSchema.find({ email });
+       if (!user) {
+          return res.status(404).json({
+              status: 200,
+              error: false,
+              message: "User not found",
+              data: []
+            });
+      }
       const otp= OTP;
-     // const otpCreatedAt = new Date();
-     // await Users?.update({email}, {otp, otpCreatedAt});
+     const otpCreatedAt = new Date();
+     await UserSchema.updateOne({ email: email }, { $set: { otp: otp, updatedAt: otpCreatedAt } }    );
       await sendEmail(email,"Techwagger Password Reset",otp);
       return res.status(200).json({
           status: 200,
