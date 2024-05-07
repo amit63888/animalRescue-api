@@ -10,7 +10,7 @@ routes.post("/upload",requireSignIn,imgupload.single("img"),(req:any,res:any)=>{
    console.log(req.file,"00000000000000");
     res.send({e:req.user,file:req.file})
 });
-
+//test 
 routes.post("/email",forgetPassword);
 export default routes;
 
