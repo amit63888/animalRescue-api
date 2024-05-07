@@ -24,7 +24,7 @@ export const generateOTP = () => {
                 }
         });
         const mailOptions = {
-            from:"Techwagger@gmail.com" ,
+            from:env.MAIL_USERNAME ,
             to: `${to}`,
             subject: subject,
             text: " ",
@@ -37,3 +37,9 @@ export const generateOTP = () => {
         throw new Error('Failed to send email');
     }
   };
+
+  export function removeDuplicates(array: any[]) {
+    const uniqueArray = Array?.from(new Set(array?.map(item => item?.toLowerCase())));
+    return uniqueArray?.map(item => array?.find(element => element?.toLowerCase() === item));
+  }
+  
