@@ -1,13 +1,13 @@
 import mongoose from "mongoose";
 
 const RolePermissionSchema = new mongoose.Schema({
-    role: {
-        type: String,  
-        required:true
-      },
+  role: {
+    type: String,
+    required: true
+  },
   permissions: {
-    type: [String],  
-    default: [],
+    type: Object, 
+    default: {}, 
   },
   createdAt: {
     type: Date,

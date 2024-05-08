@@ -38,7 +38,7 @@ export const getPermissionController = async (req: Request, res: Response) => {
     const data = await AddPermission.findOne(); 
     return res.status(200).json({
       code: 200,
-      message: "Permissions retrieved successfully",
+      message: "Permissions Retrieved Successfully",
       data, 
       error: false,
       status: true,
