@@ -16,7 +16,7 @@ const userSchema = new mongoose.Schema({
       },
       roleId: {
         type: Schema.Types.ObjectId,
-        ref: 'Role'
+        ref: 'RolePermission'
       },
      
       email: {
