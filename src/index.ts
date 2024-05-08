@@ -1,26 +1,41 @@
 import express, { Request, Response } from "express";
 import yenv from "yenv";
-import cors from "cors"; 
-import routes from "./route/volunteer";
-import permissions from "./route/addPermission";
+import cors from "cors";
+import routes from "./route/volunteer"; 
+import permissions from "./route/addPermission"; 
+
+
 const app = express();
 const env = yenv("env.yaml", { env: "development" });
-app.use(express.json());//allow json
-app.use(cors());//allow origin
-//MongoDb Database connection
-require('./config/connection'); 
-/** Error handling */
 
+// Middleware
+app.use(express.json()); // Parse incoming request bodies as JSON
+app.use(cors()); // Enable CORS for all routes
+
+// PORT
+const PORT = env.PORT || 4610;
+
+// Database connection
+require('./config/connection'); // Assuming your database connection setup is in this file
+
+/** Error handling middleware */
 app.use((req: Request, res: Response, next) => {
   next();
-}); 
-//routes
-app.use("/auth/v1", routes);
-app.use("/auth/v1", permissions);
+});
+
+// Routes
+app.use("/auth/v1", routes);  
+
+app.use("/auth/v1", permissions);  
+
+
+
+// Root route
 app.get("/", (req: Request, res: Response) => {
-  res.send("welcome to server !!!");
-}); 
-app.listen(env.PORT || 4610, () => {
-  // tslint:disable-next-line
-  console.log("Server is Running 🚀 at Port " + env.PORT);
+  res.send("Welcome to the server!!");
+});
+
+// Start server
+app.listen(PORT, () => {
+  console.log("Server is running 🚀 at Port " + PORT);
 });
