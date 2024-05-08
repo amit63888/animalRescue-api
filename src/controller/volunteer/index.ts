@@ -8,7 +8,7 @@ const UserSchema = require('../../model/volunteer/user');
 
 export const registerUser = async (req: Request, res: Response) => {
   try {
-    const { fname, lname, contact, email, profile, location, password } = req.body;
+    const { fname, lname, contact, email, profile, location, password,roleId } = req.body;
 
     // Check if the user already exists
     const existingUser = await UserSchema.findOne({ email });
@@ -26,7 +26,7 @@ export const registerUser = async (req: Request, res: Response) => {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     // Create a new user with hashed password
-    const newUser = new UserSchema({ fname, lname, contact, email, profile, location, password: hashedPassword });
+    const newUser = new UserSchema({ fname, lname, contact, email, profile, location, password: hashedPassword,roleId });
     await newUser.save();
 
     return res.status(200).json({
@@ -50,7 +50,7 @@ export const loginUser = async (req: Request, res: Response) => {
   try {
     const { email, password } = req.body; 
     // Find user by email
-    const user = await UserSchema.findOne({ email });
+    const user = await UserSchema.findOne({ email }).populate('roleId');
 
     // Check if user exists
     if (!user) {
