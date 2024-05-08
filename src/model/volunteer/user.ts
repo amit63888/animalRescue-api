@@ -34,6 +34,10 @@ const userSchema = new mongoose.Schema({
       password: {
         type: String,
         required: true,
+      }, 
+      active: {
+        type: String,  
+        default:false 
       },
       otp: {
         type: String,
