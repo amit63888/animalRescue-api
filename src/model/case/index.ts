@@ -1,5 +1,5 @@
 import mongoose, { Schema } from "mongoose"; 
-const userSchema = new mongoose.Schema({
+const CaseSchema = new mongoose.Schema({
       
       fname: {
         type: String,
@@ -62,4 +62,4 @@ const userSchema = new mongoose.Schema({
      
     
 }); 
-module.exports = mongoose.model('Users',userSchema);
+module.exports = mongoose.model('Case',CaseSchema);

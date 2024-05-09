@@ -17,7 +17,7 @@ declare global {
       const authorizationHeader = req.headers.authorization;
   
       if (!authorizationHeader) {
-        return res.status(401).send("Authorization header is missing");
+        return res.status(401).send("Authorization token is missing");
       }
   
       const token = authorizationHeader.split(' ')[1];

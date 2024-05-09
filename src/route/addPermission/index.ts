@@ -10,6 +10,7 @@ permissions.get("/role/:id",getRoleSinglePermission);
 permissions.get("/role",getRolePermission);
 permissions.delete("/role/:id",deleteRolePermission);
 permissions.put("/role/:id",updateRolePermission);
+
 export default permissions;
 
  
