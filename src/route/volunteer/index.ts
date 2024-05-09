@@ -37,6 +37,6 @@ routes.post("/upload", async (req: any, res: any) => {
     }
 });
 
-//test 
+ 
 routes.post("/email", forgetPassword);
 export default routes;
