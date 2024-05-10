@@ -1,15 +1,15 @@
 // index.ts
 import express, { Request, Response } from 'express';
-const routes = express.Router();
+const UserRoute = express.Router();
 import { forgetPassword, loginUser, registerUser } from '../../controller/volunteer/index';
 import { uploadImgFile, validateFile } from "../../utills/upload";
 
 // create post 
-routes.post("/regiser", registerUser);
-routes.post("/login", loginUser);
+UserRoute.post("/regiser", registerUser);
+UserRoute.post("/login", loginUser);
 
 //this is only for testing purpose..
-routes.post("/upload", async (req: Request, res: Response) => {
+UserRoute.post("/upload", async (req: Request, res: Response) => {
     try {
         if (!req.files || Object.keys(req.files).length === 0) {
             return res.status(400).send('No files were uploaded.');
@@ -40,5 +40,5 @@ routes.post("/upload", async (req: Request, res: Response) => {
 });
 //changes
  
-routes.post("/email", forgetPassword);
-export default routes;
+UserRoute.post("/email", forgetPassword);
+export default UserRoute;
