@@ -1,8 +1,8 @@
 import express, { Request, Response } from "express"; 
 import cors from "cors";
 import fileUpload from 'express-fileupload'
-import UserRoute from "./route/volunteer";//user mangement
-import permissionsRoute from "./route/addPermission";//Role & Permissins
+import UserRoute from "./route/volunteer";//user management
+import permissionsRoute from "./route/addPermission";//Role & Permissions
 import dotenv from 'dotenv'; // Import dotenv package
 
 dotenv.config(); // Load environment variables from .env file
