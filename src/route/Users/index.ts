@@ -1,7 +1,7 @@
 // index.ts
 import express, { Request, Response } from 'express';
 const UserRoute = express.Router();
-import { forgetPassword, loginUser, registerUser } from '../../controller/volunteer/index';
+import { forgetPassword, loginUser, registerUser } from '../../controller/Users/index';
 import { uploadImgFile, validateFile } from "../../utills/upload";
 
 // create post 

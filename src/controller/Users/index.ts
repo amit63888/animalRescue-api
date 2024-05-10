@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";  
 import { generateOTP, sendEmail } from "../../utills"; 
-const UserSchema = require('../../model/volunteer/user');
+const UserSchema = require('../../model/Users/user');
 
 export const registerUser = async (req: Request, res: Response) => {
   try {
