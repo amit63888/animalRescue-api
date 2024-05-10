@@ -15,7 +15,7 @@ app.use(cors()); // Enable CORS for all routes
 app.use(fileUpload()); // Enable file upload middleware , from here we can access the the express-file-upload any where 
 
 // PORT
-const PORT = process.env.PORT  ; // Use PORT from environment variable or default to 4610
+const PORT = process.env.PORT || 4610  ; // Use PORT from environment variable or default to 4610
 
 // Database connection
 require('./config/connection'); // Assuming your database connection setup is in this file
