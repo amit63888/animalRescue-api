@@ -1,65 +1,68 @@
 import mongoose, { Schema } from "mongoose"; 
+
 const userSchema = new mongoose.Schema({
-      
-      fname: {
+    fname: {
         type: String,
         required: true,
-      },
-      
-      lname: {
+    },
+    lname: {
         type: String,
         required: true,
-      },
-      contact: {
+    },
+    contact: {
         type: Number,
         required: true,
-      },
-      roleId: {
+    },
+    roleId: {
         type: Schema.Types.ObjectId,
         ref: 'RolePermission'
-      },
-     
-      email: {
+    },
+    email: {
         type: String,
         required: true,
-      },   
-      profile: {
+    },   
+    profile: {
         type: String,
         required: true,
-      },
-      location: {
-        type: String,
-        required: true,
-      },
-      password: {
-        type: String,
-        required: true,
-      }, 
-      active: {
-        type: String,  
-        default:false 
-      },
-      otp: {
-        type: String,
-       
-      },
-      token: {
-        type: String,
-        
-      },
-     
-        createdAt: {
-          type: Date,  
-          required: true,
-          default: Date.now  
+    },
+    location: {
+        type: {
+            type: String,
+            enum: ['Point'], // 'location' must be a GeoJSON Point
+            required: true
         },
-        updatedAt: {
-          type: Date,  
-          required: true,
-          default: Date.now  
+        coordinates: {
+            type: [Number], // array of numbers, [longitude, latitude]
+            required: true
         }
+    },
+    password: {
+        type: String,
+        required: true,
+    }, 
+    active: {
+        type: Boolean,  
+        default: false 
+    },
+    otp: {
+        type: String,
+    },
+    token: {
+        type: String,
+    },
+    createdAt: {
+        type: Date,  
+        required: true,
+        default: Date.now  
+    },
+    updatedAt: {
+        type: Date,  
+        required: true,
+        default: Date.now  
+    }
+});
 
-     
-    
-}); 
-module.exports = mongoose.model('Users',userSchema);
+// Index the 'location' field for efficient geospatial queries
+userSchema.index({ location: '2dsphere' });
+
+module.exports = mongoose.model('Users', userSchema);
