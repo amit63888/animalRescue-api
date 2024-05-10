@@ -2,7 +2,7 @@ import express, { Request, Response } from "express";
 import yenv from "yenv";
 import cors from "cors";
 import fileUpload from 'express-fileupload'
-import routes from "./route/volunteer";
+import UserRoute from "./route/volunteer";
 import permissions from "./route/addPermission";
 
 const app = express();
@@ -26,7 +26,7 @@ app.use((req: Request, res: Response, next) => {
 
 // Routes
 // Assuming routes are correctly defined and imported
-app.use("/auth/v1", routes);
+app.use("/auth/v1", UserRoute);
 app.use("/auth/v1", permissions); 
 
 // Root route
