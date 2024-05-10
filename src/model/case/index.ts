@@ -40,8 +40,7 @@ const caseSchema = new mongoose.Schema({
   assignedTo: {
     type: Schema.Types.ObjectId,
     ref: 'Users'
-  },
-
+  }, 
 
   isFraud: {
     type: Boolean,
