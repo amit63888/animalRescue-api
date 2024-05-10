@@ -1,10 +1,8 @@
-import mongoose from 'mongoose';
-import yenv from "yenv";
-
-const env = yenv("env.yaml", { env: "development" });
+import mongoose from 'mongoose'; 
 
 // Connect to MongoDB
-mongoose.connect(env.MONGO_URL);
+const url=process.env.MONGO_URL  
+mongoose.connect(`${url}`);
 
 // Get the default connection
 const db = mongoose.connection;
