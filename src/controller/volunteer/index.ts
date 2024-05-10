@@ -1,9 +1,7 @@
 import { Request, Response } from "express";
 import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken"; 
-import yenv from "yenv";
-import { generateOTP, sendEmail } from "../../utills";
-const env = yenv("env.yaml", { env: "development" });
+import jwt from "jsonwebtoken";  
+import { generateOTP, sendEmail } from "../../utills"; 
 const UserSchema = require('../../model/volunteer/user');
 
 export const registerUser = async (req: Request, res: Response) => {
@@ -75,8 +73,9 @@ export const loginUser = async (req: Request, res: Response) => {
     }
 
     // User authenticated, generate JWT token
-    const token = jwt.sign({ userId: user._id },env.JWT_SECRET, { expiresIn: '1h' });
-
+    const secret = process.env.JWT_SECRET ;
+    const token = jwt.sign({ userId: user._id }, `${secret}`, { expiresIn: '1h' });
+    
     return res.status(200).json({
       code: 200,
       message: "Login successful",
@@ -98,40 +97,9 @@ export const loginUser = async (req: Request, res: Response) => {
 
 export const ChangePassword = async (req: Request, res: Response) => {
   try {
-    const { email, password } = req.body; 
-    // Find user by email
-    const user = await UserSchema.findOne({ email });
-
-    // Check if user exists
-    if (!user) {
-      return res.status(404).json({
-        code: 404,
-        message: "User not found",
-        error: true,
-        status: false,
-      });
-    }
-
-    // Check password
-    const isPasswordValid = await bcrypt.compare(password, user.password);
-
-    if (!isPasswordValid) {
-      return res.status(401).json({
-        code: 401,
-        message: "Invalid password",
-        error: true,
-        status: false,
-      });
-    }
-
-    // User authenticated, generate JWT token
-    const token = jwt.sign({ userId: user._id },env.JWT_SECRET, { expiresIn: '1h' });
-
     return res.status(200).json({
       code: 200,
-      message: "Login successful",
-      token: token,
-      user,
+      message: "Internal Server Error",
       error: false,
       status: true,
     });

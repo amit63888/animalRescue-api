@@ -1,6 +1,5 @@
-import nodemailer from 'nodemailer'
-import yenv from "yenv"; 
-const env = yenv("env.yaml", { env: "development" }); 
+import nodemailer, { Transporter } from 'nodemailer';
+ 
 export const generateOTP = () => {
     const otpLength = 10;
     const digits = '0123456789';
@@ -12,31 +11,31 @@ export const generateOTP = () => {
   };
 
 
-  export const sendEmail = async (to:any, subject:any, text:any) => {
+  export const sendEmail = async (to: any, subject: any, text: any) => {
     try {
-        const transporter = nodemailer.createTransport({
-            host: env.MAIL_HOST,
-            port: env.MAIL_PORT,
+        const transporter: Transporter<unknown> = nodemailer.createTransport({
+            host: process.env.MAIL_HOST!,
+            port: Number(process.env.MAIL_PORT),
             secure: false,
             auth: {
-                   user:env.MAIL_USERNAME,
-                   pass:env.MAIL_PASSWORD
-                }
+                user: process.env.MAIL_USERNAME!,
+                pass: process.env.MAIL_PASSWORD!
+            }
         });
         const mailOptions = {
-            from:env.MAIL_USERNAME ,
+            from: process.env.MAIL_USERNAME!,
             to: `${to}`,
             subject: subject,
             text: " ",
             html: "<p> click below, To Reset <a href='https://techwagger.com/reset-password/" + text + "'> click here,</a></p>"
-  //
         };
-         await transporter.sendMail(mailOptions);
+
+        await transporter.sendMail(mailOptions);
     } catch (error) {
         console.error('Error sending email:', error);
         throw new Error('Failed to send email');
     }
-  };
+};
 
   export function removeDuplicates(array: any[]) {
     const uniqueArray = Array?.from(new Set(array?.map(item => item?.toLowerCase())));

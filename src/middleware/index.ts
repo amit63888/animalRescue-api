@@ -7,9 +7,7 @@ declare global {
   }
    
   import jwt from "jsonwebtoken";
-  import yenv from "yenv";
   
-  const env = yenv("env.yaml", { env: "development" });
   
   // Protected Routes token base
   export const requireSignIn = async (req: any, res: any, next: any) => {
@@ -21,7 +19,7 @@ declare global {
       }
   
       const token = authorizationHeader.split(' ')[1];
-      const decoded = jwt.verify(token, env.JWT_SECRET) as { userId: string };
+      const decoded = jwt.verify(token, `${process.env.JWT_SECRET}`) as { userId: string };
   
       req.user = decoded;
       next();

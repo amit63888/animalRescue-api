@@ -1,12 +1,13 @@
-import express, { Request, Response } from "express";
-import yenv from "yenv";
+import express, { Request, Response } from "express"; 
 import cors from "cors";
 import fileUpload from 'express-fileupload'
 import UserRoute from "./route/volunteer";
 import permissions from "./route/addPermission";
+import dotenv from 'dotenv'; // Import dotenv package
 
-const app = express();
-const env = yenv("env.yaml", { env: "development" });
+dotenv.config(); // Load environment variables from .env file
+
+const app = express(); 
 
 // Middleware
 app.use(express.json()); // Parse incoming request bodies as JSON
@@ -14,7 +15,7 @@ app.use(cors()); // Enable CORS for all routes
 app.use(fileUpload()); // Enable file upload middleware
 
 // PORT
-const PORT = env.PORT || 4610;
+const PORT = process.env.PORT  ; // Use PORT from environment variable or default to 4610
 
 // Database connection
 require('./config/connection'); // Assuming your database connection setup is in this file
@@ -25,7 +26,6 @@ app.use((req: Request, res: Response, next) => {
 });
 
 // Routes
-// Assuming routes are correctly defined and imported
 app.use("/auth/v1", UserRoute);
 app.use("/auth/v1", permissions); 
 
