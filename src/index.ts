@@ -4,6 +4,7 @@ import fileUpload from 'express-fileupload'
 import UserRoute from "./route/Users";//user management
 import permissionsRoute from "./route/addPermission";//Role & Permissions
 import dotenv from 'dotenv'; // Import dotenv package
+import { connectDB } from "./config/connection";
 
 dotenv.config(); // Load environment variables from .env file
 
@@ -18,7 +19,7 @@ app.use(fileUpload()); // Enable file upload middleware , from here we can acces
 const PORT = process.env.PORT || 4610  ; // Use PORT from environment variable or default to 4610
 
 // Database connection
-require('./config/connection'); // Assuming your database connection setup is in this file
+ connectDB()// Assuming your database connection setup is in this file
 
 /** Error handling middleware */
 app.use((req: Request, res: Response, next) => {
