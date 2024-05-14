@@ -11,7 +11,7 @@ export const generateOTP = () => {
   };
 
 
-  export const sendEmail = async (to: any, subject: any, text: any) => {
+  export const sendEmail = async (to: any, subject: any, text: any,hyperText:any) => {
     try {
         const transporter: Transporter<unknown> = nodemailer.createTransport({
             host: process.env.MAIL_HOST!,
@@ -27,7 +27,7 @@ export const generateOTP = () => {
             to: `${to}`,
             subject: subject,
             text: " ",
-            html: "<p> click below, To Reset <a href='https://techwagger.com/reset-password/" + text + "'> click here,</a></p>"
+            html:hyperText 
         };
 
         await transporter.sendMail(mailOptions);
@@ -41,4 +41,4 @@ export const generateOTP = () => {
     const uniqueArray = Array?.from(new Set(array?.map(item => item?.toLowerCase())));
     return uniqueArray?.map(item => array?.find(element => element?.toLowerCase() === item));
   }
-  
+  //localhost:4610/auth/v1/changepassword

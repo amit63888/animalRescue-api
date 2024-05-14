@@ -47,10 +47,7 @@ export const registerUser = async (req: Request, res: Response) => {
 export const loginUser = async (req: Request, res: Response) => {
   try {
     const { email, password } = req.body; 
-    // Find user by email
-    const user = await Login.findOne({ email })
-
-    // Check if user exists
+    const user = await Login.findOne({ email }).populate('userId') 
     if (!user) {
       return res.status(404).json({
         code: 404,
@@ -58,11 +55,8 @@ export const loginUser = async (req: Request, res: Response) => {
         error: true,
         status: false,
       });
-    }
-
-    // Check password
-    const isPasswordValid = await bcrypt.compare(password, user.password);
-
+    } 
+    const isPasswordValid = await bcrypt.compare(password, user.password); 
     if (!isPasswordValid) {
       await createUserLog(user.userId,"login",`Login failed due to wrong password : ${password}`);
       return res.status(401).json({
@@ -71,17 +65,16 @@ export const loginUser = async (req: Request, res: Response) => {
         error: true,
         status: false,
       });
-    }
-
-    // User authenticated, generate JWT token
+    } 
     const secret = process.env.JWT_SECRET ;
     const token = jwt.sign({ userId: user._id }, `${secret}`, { expiresIn: '1h' });
-    await createUserLog(user.userId,"login",`Login Successful`);
+     await Login.findOneAndUpdate( { email },   { $set: {lastLogin: user?.currentLogin, lastLoginTime: user?.currentLoginTime,currentLogin:"90", updatedAt: new Date() } },  { new: true }   );  
+    await createUserLog(user.userId,"login",`Login Successfull`);
     return res.status(200).json({
       code: 200,
-      message: "Login successful",
+      message: "Login successfull",
       token: token,
-      user,
+      user:user,
       error: false,
       status: true,
     });
@@ -98,8 +91,16 @@ export const loginUser = async (req: Request, res: Response) => {
 
 export const ChangePassword = async (req: Request, res: Response) => {
   try {
+    const { otp,password } = req.body;
+    const saltRounds = 10; 
+    const salt = await bcrypt.genSalt(saltRounds); 
+    const hashedPassword = await bcrypt.hash(password, salt);
+    const otpCreatedAt = new Date();
+    const updatedData = await Login.findOneAndUpdate( { otp },   { $set: { password: hashedPassword, updatedAt: otpCreatedAt } },  { new: true }   );  
+    await createUserLog(updatedData?.userId,"Change Password",`Password updated successfully -:${password}`);
     return res.status(200).json({
       code: 200,
+      data:updatedData,
       message: "Internal Server Error",
       error: false,
       status: true,
@@ -120,7 +121,7 @@ export const forgetPassword = async (req: any, res: any) => {
   try {
       const { email } = req.body;
       const OTP = await generateOTP();
-       const user = await Users.find({ email });
+       const user = await Login.findOne({ email });
        if (!user) {
           return res.status(404).json({
               status: 200,
@@ -131,15 +132,16 @@ export const forgetPassword = async (req: any, res: any) => {
       }
       const otp= OTP;
      const otpCreatedAt = new Date();
-     await Users.updateOne({ email: email }, { $set: { otp: otp, updatedAt: otpCreatedAt } }    );
-      await sendEmail(email,"Techwagger Password Reset",otp);
+     await Login.updateOne({ email: email }, { $set: { otp: otp, updatedAt: otpCreatedAt } }    );
+      await sendEmail(email,"Techwagger Password Reset",otp,"<p> click below, To Reset <a href='https://techwagger.com/reset-password/" + otp + "'> click here,</a></p>");
+      await createUserLog(`${user.userId}`,"Password Reset link request",`Link sent successfully.`);
       return res.status(200).json({
           status: 200,
           error: false,
           message: "Link sent to  your mail, successfully.",
           data: {
                   email
-                },
+                }, 
         });
   } catch (error) {
       return res.status(500).json({

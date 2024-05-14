@@ -30,13 +30,14 @@ const loginSchema = new mongoose.Schema({
     },
 
     lastLoginTime: {
-        type: String,
-         
+        type: Date,  
+        required: true,
+        default: Date.now  
       },
       currentLoginTime: {
-        type: String,
-        default: Date.now,  
+        type: Date,  
         required: true,
+        default: Date.now  
       }, 
     createdAt: {
         type: Date,  
