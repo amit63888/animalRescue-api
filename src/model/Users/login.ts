@@ -22,7 +22,7 @@ const loginSchema = new mongoose.Schema({
      
     lastLogin: {
         type: String,
-        required: true,
+         
     },
    currentLogin: {
         type: String,
@@ -31,8 +31,7 @@ const loginSchema = new mongoose.Schema({
 
     lastLoginTime: {
         type: String,
-        default: Date.now,  
-        required: true,
+         
       },
       currentLoginTime: {
         type: String,
@@ -53,4 +52,4 @@ const loginSchema = new mongoose.Schema({
 
  
 
-module.exports = mongoose.model('Login', loginSchema);
+export default mongoose.model('Login', loginSchema);

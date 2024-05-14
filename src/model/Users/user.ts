@@ -7,7 +7,7 @@ const userSchema = new mongoose.Schema({
     },
     lastName: {
         type: String,
-        required: true,
+        
     },
     phone: {
         type: Number,
@@ -19,7 +19,7 @@ const userSchema = new mongoose.Schema({
     },    
     photo: {
         type: String,
-        required: true,
+         
     },
     location: {
         type: {
@@ -33,7 +33,7 @@ const userSchema = new mongoose.Schema({
         }
     },
     radius: {
-        type: Number,
+        type: String,
         required: true,
     }, 
     status: {
@@ -57,4 +57,4 @@ const userSchema = new mongoose.Schema({
 // Index the 'location' field for efficient geospatial queries
 userSchema.index({ location: '2dsphere' });
 
-module.exports = mongoose.model('Users', userSchema);
+export default mongoose.model('Users', userSchema);
