@@ -1,7 +1,7 @@
 // index.ts
 import express, { Request, Response } from 'express';
 const UserRoute = express.Router();
-import { forgetPassword, loginUser, registerUser } from '../../controller/Users/index';
+import { forgetPassword, loginUser, registerUser ,ChangePassword} from '../../controller/Users/index';
 import { uploadImgFile, validateFile } from "../../utills/upload";
 
 // create post 
@@ -39,6 +39,6 @@ UserRoute.post("/upload", async (req: Request, res: Response) => {
     }
 });
 //changes
- 
+UserRoute.post("/changePassword", ChangePassword);
 UserRoute.post("/email", forgetPassword);
 export default UserRoute;
