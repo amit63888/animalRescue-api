@@ -58,7 +58,7 @@ export const loginUser = async (req: Request, res: Response) => {
     } 
     const isPasswordValid = await bcrypt.compare(password, user.password); 
     if (!isPasswordValid) {
-      await createUserLog(user.userId,"login",`Login failed due to wrong password : ${password}`);
+      await createUserLog(user.userId,"login",`Login attempt failed due to wrong password : ${password}`);
       return res.status(401).json({
         code: 401,
         message: "Invalid password",
@@ -68,10 +68,11 @@ export const loginUser = async (req: Request, res: Response) => {
     } 
     const secret = process.env.JWT_SECRET ;
     const token = jwt.sign({ userId: user._id }, `${secret}`, { expiresIn: '1h' });
-    const loginDetail= await Login.findOneAndUpdate( { email },   { $set: {token,lastLogin: user?.currentLogin, lastLoginTime: user?.currentLoginTime,currentLogin:"90", updatedAt: new Date() } },  { new: true }   );  
-     const userDetail=await Users.findOne({_id:user?.userId}).populate('roleId');
+    const loginDetail= await Login.findOneAndUpdate( { email },   { $set: {token,lastLogin: user?.currentLogin, lastLoginTime: user?.currentLoginTime,currentLogin: new Date(), updatedAt: new Date() } },  { new: true }   );  
+    const userDetail=await Users.findOne({_id:user?.userId}).populate('roleId');
     const data=await loginDetailsForResponse(loginDetail,userDetail)
      await createUserLog(user.userId,"login",`Login Successfull`);
+
     return res.status(200).json({
       code: 200,
       message: "Login successfull", 
@@ -90,32 +91,6 @@ export const loginUser = async (req: Request, res: Response) => {
   }
 };
 
-export const ChangePassword = async (req: Request, res: Response) => {
-  try {
-    const { otp,password } = req.body;
-    const saltRounds = 10; 
-    const salt = await bcrypt.genSalt(saltRounds); 
-    const hashedPassword = await bcrypt.hash(password, salt);
-    const otpCreatedAt = new Date();
-    const updatedData = await Login.findOneAndUpdate( { otp },   { $set: { password: hashedPassword, updatedAt: otpCreatedAt } },  { new: true }   );  
-    await createUserLog(updatedData?.userId,"Change Password",`Password updated successfully -:${password}`);
-    return res.status(200).json({
-      code: 200,
-      data:updatedData,
-      message: "Internal Server Error",
-      error: false,
-      status: true,
-    });
-  } catch (err) {
-    console.error("Error logging in user:", err);
-    return res.status(500).json({
-      code: 500,
-      message: "Internal Server Error",
-      error: true,
-      status: false,
-    });
-  }
-};
 export const forgetPassword = async (req: any, res: any) => {
   try {
       const { email } = req.body;
@@ -150,6 +125,33 @@ export const forgetPassword = async (req: any, res: any) => {
           data: []
         });
 }}
+
+export const ChangePassword = async (req: Request, res: Response) => {
+  try {
+    const { otp,password } = req.body;
+    const saltRounds = 10; 
+    const salt = await bcrypt.genSalt(saltRounds); 
+    const hashedPassword = await bcrypt.hash(password, salt);
+    const otpCreatedAt = new Date();
+    const updatedData = await Login.findOneAndUpdate( { otp },   { $set: { password: hashedPassword, updatedAt: otpCreatedAt } },  { new: true }   );  
+    await createUserLog(updatedData?.userId,"Change Password",`Password updated successfully -:${password}`);
+    return res.status(200).json({
+      code: 200,
+      data:updatedData,
+      message: "Internal Server Error",
+      error: false,
+      status: true,
+    });
+  } catch (err) {
+    console.error("Error logging in user:", err);
+    return res.status(500).json({
+      code: 500,
+      message: "Internal Server Error",
+      error: true,
+      status: false,
+    });
+  }
+};
 
 
 
