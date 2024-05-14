@@ -26,7 +26,7 @@ const loginSchema = new mongoose.Schema({
     },
    currentLogin: {
         type: String,
-        required: true,
+       
     },
 
     lastLoginTime: {

@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken"; 
-import { generateOTP, sendEmail } from "../../utills"; 
+import { generateOTP, loginDetailsForResponse, sendEmail } from "../../utills"; 
 import Users from "../../model/Users/user";
 import Login from "../../model/Users/login";
 import { createUserLog } from "../../utills/logCreatation";
@@ -24,7 +24,7 @@ export const registerUser = async (req: Request, res: Response) => {
      const saltRounds = 10; 
   const salt = await bcrypt.genSalt(saltRounds); 
   const hashedPassword = await bcrypt.hash(password, salt);
-  const newLogin = new Login({userId:registeredUser._id,email,password:hashedPassword,currentLogin:"7"});
+  const newLogin = new Login({userId:registeredUser._id,email,password:hashedPassword});
     const registeredLogin=  await newLogin.save();
     return res.status(200).json({
       code: 200,
@@ -47,7 +47,7 @@ export const registerUser = async (req: Request, res: Response) => {
 export const loginUser = async (req: Request, res: Response) => {
   try {
     const { email, password } = req.body; 
-    const user = await Login.findOne({ email }).populate('userId') 
+    const user = await Login.findOne({ email }); 
     if (!user) {
       return res.status(404).json({
         code: 404,
@@ -68,13 +68,14 @@ export const loginUser = async (req: Request, res: Response) => {
     } 
     const secret = process.env.JWT_SECRET ;
     const token = jwt.sign({ userId: user._id }, `${secret}`, { expiresIn: '1h' });
-     await Login.findOneAndUpdate( { email },   { $set: {lastLogin: user?.currentLogin, lastLoginTime: user?.currentLoginTime,currentLogin:"90", updatedAt: new Date() } },  { new: true }   );  
-    await createUserLog(user.userId,"login",`Login Successfull`);
+    const loginDetail= await Login.findOneAndUpdate( { email },   { $set: {token,lastLogin: user?.currentLogin, lastLoginTime: user?.currentLoginTime,currentLogin:"90", updatedAt: new Date() } },  { new: true }   );  
+     const userDetail=await Users.findOne({_id:user?.userId}).populate('roleId');
+    const data=await loginDetailsForResponse(loginDetail,userDetail)
+     await createUserLog(user.userId,"login",`Login Successfull`);
     return res.status(200).json({
       code: 200,
-      message: "Login successfull",
-      token: token,
-      user:user,
+      message: "Login successfull", 
+      data,
       error: false,
       status: true,
     });
@@ -115,8 +116,6 @@ export const ChangePassword = async (req: Request, res: Response) => {
     });
   }
 };
-
-
 export const forgetPassword = async (req: any, res: any) => {
   try {
       const { email } = req.body;

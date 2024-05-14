@@ -42,3 +42,25 @@ export const generateOTP = () => {
     return uniqueArray?.map(item => array?.find(element => element?.toLowerCase() === item));
   }
   //localhost:4610/auth/v1/changepassword
+
+  export const loginDetailsForResponse = (loginDetail: any, userDetail: any) => {
+    return {
+        userId: loginDetail?.userId,
+        email: loginDetail?.email,
+        role: userDetail?.roleId?.role,
+        permissions: userDetail?.roleId?.permissions, 
+        firstName: userDetail?.firstName,
+        lastName: userDetail?.lastName,
+        phone: userDetail?.phone, 
+        photo: userDetail?.photo,
+        radius: userDetail?.radius,
+        token: loginDetail?.token,
+        location: userDetail?.location,
+        currentLogin: loginDetail?.currentLogin,
+        currentLoginTime: loginDetail?.currentLoginTime,
+        lastLogin: loginDetail?.lastLogin,
+        lastLoginTime: loginDetail?.lastLoginTime,
+        createdAt: userDetail?.createdAt,
+        updatedAt: userDetail?.updatedAt
+    };
+};
