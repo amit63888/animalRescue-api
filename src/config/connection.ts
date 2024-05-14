@@ -4,7 +4,7 @@ export const connectDB = async () => {
   try {
     const url = process.env.MONGO_URL; // MongoDB connection URL from environment variable
     await mongoose.connect(`${url}` );
-    console.log("🚀 MongoDB connected successfully");
+    console.log("🚀 MongoDB connected successfully !!");
   } catch (error) {
     console.error("❌ MongoDB connection error:", error);
     process.exit(1); // Exit with failure
@@ -12,7 +12,7 @@ export const connectDB = async () => {
 
   // Get the default connection
   const db = mongoose.connection; 
-  
+
   // If the connection throws an error
   db.on('error', (err) => {
     console.error("❌ MongoDB connection error:", err);

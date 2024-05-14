@@ -25,3 +25,87 @@ export const uploadImgFile = (uploadPath: string, file: any) => {
   } 
   return null;
 };
+
+
+
+
+// login 
+
+// pro
+// pass
+
+// otp 
+// tocken
+// emil //
+
+// /////
+// login==
+// emil 
+// pass
+
+
+
+
+
+// Login
+// [
+// 	{
+// 		"id":objectId(),
+// 		"userId": User_Collection -> ObjectId(user_id)
+// 		"email":"",
+// 		"password":"",
+// 		"salt": "",
+// 		"lastLoggin": "Last IP",
+// 		"currentLogin":"Currect IP"
+// 		"lastLoginTime":"",
+// 		"currentLoginTime":""
+// 	}
+// ]
+ 
+// User
+// [
+// 	{
+// 		"id":"",
+// 		"roleId":"",
+// 		"firstName":""
+// 		"lastName":"",
+// 		"mobileNumber":"",
+// 		"latLng":{
+// 			"lat":0000,
+// 			"lng": 000
+// 		},
+// 		"radius":"",
+// 		"photo":"",
+// 		"status":"0/1/90",
+// 	}
+// ]
+ 
+// Cases
+// [
+// 	{
+// 		"id"
+// 	}
+// ]
+ 
+// Log
+// [
+// 	{
+// 		"id":"",
+// 		"userId": User_Collection -> ObjectId(user_id),
+// 		"activity":
+// 	}
+// ]
+ 
+ 
+// {"email":anoop@techwagger.com,"time:"","activity":"user login","Message":"User "}
+ 
+ 
+// Uploads
+// 	-> UserID
+// 		-> CaseID1
+// 			-> Thumbnail
+// 			-> image.png
+// 		-> CaseID2
+// 			-> Thumbnail
+// 			-> image.png
+// has context menu

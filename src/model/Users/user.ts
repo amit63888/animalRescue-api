@@ -1,27 +1,23 @@
 import mongoose, { Schema } from "mongoose"; 
 
 const userSchema = new mongoose.Schema({
-    fname: {
+    firstName: {
         type: String,
         required: true,
     },
-    lname: {
+    lastName: {
         type: String,
         required: true,
     },
-    contact: {
+    phone: {
         type: Number,
         required: true,
     },
     roleId: {
         type: Schema.Types.ObjectId,
         ref: 'RolePermission'
-    },
-    email: {
-        type: String,
-        required: true,
-    },   
-    profile: {
+    },    
+    photo: {
         type: String,
         required: true,
     },
@@ -36,20 +32,16 @@ const userSchema = new mongoose.Schema({
             required: true
         }
     },
-    password: {
-        type: String,
+    radius: {
+        type: Number,
         required: true,
     }, 
-    active: {
-        type: Boolean,  
-        default: false 
-    },
-    otp: {
-        type: String,
-    },
-    token: {
-        type: String,
-    },
+    status: {
+        type: Number,
+        default: 0,  
+        enum: [0, 1, 90]  
+      },
+   
     createdAt: {
         type: Date,  
         required: true,

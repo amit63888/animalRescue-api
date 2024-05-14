@@ -1,10 +1,7 @@
 import mongoose, { Schema } from "mongoose";
 
 const caseSchema = new mongoose.Schema({
-  attachment: {
-    type: [String],
-    required: true,
-  },
+  
   location: {
     type: {
       type: String,
@@ -31,17 +28,18 @@ const caseSchema = new mongoose.Schema({
   },
   priority: {
     type: String,
-    required: true,
+    enum: ["emergency", "normal"], 
+    required: true
   },
   status: {
     type: String,
-    required: true,
-  },
-  assignedTo: {
-    type: Schema.Types.ObjectId,
-    ref: 'Users'
+    enum: ["pending", "inprogress","done"], 
+    required: true
   }, 
-
+  victimDetail: {
+    type: String,
+    required: true
+  },
   isFraud: {
     type: Boolean,
     default: false
