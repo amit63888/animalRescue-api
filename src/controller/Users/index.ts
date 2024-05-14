@@ -6,7 +6,7 @@ const UserSchema = require('../../model/Users/user');
 
 export const registerUser = async (req: Request, res: Response) => {
   try {
-    const { fname, lname, contact, email, profile, location, password,roleId } = req.body;
+    const { fname, lname, contact, email, profile, location, password, roleId } = req.body;
 
     // Check if the user already exists
     const existingUser = await UserSchema.findOne({ email });
@@ -20,11 +20,15 @@ export const registerUser = async (req: Request, res: Response) => {
       });
     }
 
-    // Hash the password
-    const hashedPassword = await bcrypt.hash(password, 10);
+    // Generate a random salt
+    const saltRounds = 10; // You can adjust this value according to your security requirements
+    const salt = await bcrypt.genSalt(saltRounds);
+
+    // Hash the password with the salt
+    const hashedPassword = await bcrypt.hash(password, salt);
 
     // Create a new user with hashed password
-    const newUser = new UserSchema({ fname, lname, contact, email, profile, location, password: hashedPassword,roleId });
+    const newUser = new UserSchema({ fname, lname, contact, email, profile, location, password: hashedPassword, roleId });
     await newUser.save();
 
     return res.status(200).json({
@@ -42,7 +46,7 @@ export const registerUser = async (req: Request, res: Response) => {
       status: false,
     });
   }
-};
+}; 
 //login
 export const loginUser = async (req: Request, res: Response) => {
   try {
