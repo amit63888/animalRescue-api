@@ -1,10 +1,11 @@
 import { Request, Response } from "express";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken"; 
-import { generateOTP, loginDetailsForResponse, sendEmail } from "../../utills"; 
+import { GetIp, generateOTP, loginDetailsForResponse, sendEmail } from "../../utills"; 
 import Users from "../../model/Users/user";
 import Login from "../../model/Users/login";
 import { createUserLog } from "../../utills/logCreatation";
+import { forgetPasswordMailTemplate } from "../../utills/mailTemplate";
  
 
 export const registerUser = async (req: Request, res: Response) => {
@@ -68,7 +69,7 @@ export const loginUser = async (req: Request, res: Response) => {
     } 
     const secret = process.env.JWT_SECRET ;
     const token = jwt.sign({ userId: user._id }, `${secret}`, { expiresIn: '1h' });
-    const loginDetail= await Login.findOneAndUpdate( { email },   { $set: {token,lastLogin: user?.currentLogin, lastLoginTime: user?.currentLoginTime,currentLogin: new Date(), updatedAt: new Date() } },  { new: true }   );  
+    const loginDetail= await Login.findOneAndUpdate( { email },   { $set: {token,lastLogin: user?.currentLogin, lastLoginTime: user?.currentLoginTime,currentLogin: await GetIp(), updatedAt: new Date() } },  { new: true }   );  
     const userDetail=await Users.findOne({_id:user?.userId}).populate('roleId');
     const data=await loginDetailsForResponse(loginDetail,userDetail)
      await createUserLog(user.userId,"login",`Login Successfull`);
@@ -91,7 +92,7 @@ export const loginUser = async (req: Request, res: Response) => {
   }
 };
 
-export const forgetPassword = async (req: any, res: any) => {
+export const forgetPassword = async (req: Request, res: Response) => {
   try {
       const { email } = req.body;
       const OTP = await generateOTP();
@@ -107,7 +108,7 @@ export const forgetPassword = async (req: any, res: any) => {
       const otp= OTP;
      const otpCreatedAt = new Date();
      await Login.updateOne({ email: email }, { $set: { otp: otp, updatedAt: otpCreatedAt } }    );
-      await sendEmail(email,"Techwagger Password Reset",otp,"<p> click below, To Reset <a href='https://techwagger.com/reset-password/" + otp + "'> click here,</a></p>");
+     await sendEmail(email,"Password Reset Link",otp,forgetPasswordMailTemplate({subject:"amit chauahan",text:"reset",hyperText:"89999"}));
       await createUserLog(`${user.userId}`,"Password Reset link request",`Link sent successfully.`);
       return res.status(200).json({
           status: 200,

@@ -1,5 +1,5 @@
 import nodemailer, { Transporter } from 'nodemailer';
- 
+const axios = require('axios');
 export const generateOTP = () => {
     const otpLength = 10;
     const digits = '0123456789';
@@ -64,3 +64,14 @@ export const generateOTP = () => {
         updatedAt: userDetail?.updatedAt
     };
 };
+
+export const GetIp=async()=>{
+    try { 
+        const response = await axios.get('https://api.ipify.org/?format=json'); 
+        const publicIpAddress = response.data.ip; 
+        return publicIpAddress;
+      } catch (error) {
+        console.error('Error fetching IP address:', error);
+      
+      }
+}
